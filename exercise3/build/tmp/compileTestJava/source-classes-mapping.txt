@@ -1,0 +1,2 @@
+ase/money/MoneyTest.java
+ ase.money.MoneyTest

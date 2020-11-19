@@ -1,0 +1,42 @@
+// COMP5911M Coursework 1, Part 3
+
+plugins {
+  id 'java-library'
+  id 'idea'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testImplementation(
+    'org.junit.jupiter:junit-jupiter-api:5.6.2',
+    'org.hamcrest:hamcrest:2.2'
+  )
+  testRuntimeOnly(
+    'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+  )
+}
+
+test {
+  useJUnitPlatform()
+
+  testLogging {
+    events 'PASSED', 'FAILED', 'SKIPPED'
+  }
+}
+
+javadoc {
+  options.addBooleanOption('html5', true)   // Needs JDK 9 or newer
+}
+
+idea {
+  module {
+    sourceDirs += file('src/main/java')
+    testSourceDirs += file('src/test/java')
+    inheritOutputDirs = false
+    outputDir = file('build/classes/java/main')
+    testOutputDir = file('build/classes/java/test')
+  }
+}

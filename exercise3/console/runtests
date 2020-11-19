@@ -1,0 +1,21 @@
+#!/bin/bash
+# Script to simplify use of ConsoleLauncher
+# (Note: it is better to run tests via Gradle, Maven or Ant instead)
+
+junit=junit-platform-console-standalone-1.6.2.jar
+srcmain=../src/main/java/ase/money
+srctest=../src/test/java/ase/money
+build=../build/classes/java
+
+echo Compiling classes...
+mkdir -p $build/main
+javac -d $build/main $srcmain/*.java
+
+echo Compiling tests...
+mkdir -p $build/test
+javac -d $build/test -cp $build/main:$junit $srctest/*.java
+
+echo Running tests...
+java -jar $junit -cp $build/test:$build/main \
+  --disable-banner --fail-if-no-tests \
+  -p ase.money $*

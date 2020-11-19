@@ -1,0 +1,6 @@
+ase/rental/RentalTest.java
+ ase.rental.RentalTest
+ase/rental/CustomerTest.java
+ ase.rental.CustomerTest
+ase/rental/CarTest.java
+ ase.rental.CarTest
