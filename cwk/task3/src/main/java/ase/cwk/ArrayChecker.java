@@ -6,6 +6,7 @@ package ase.cwk;
  * @author Nick Efford
  */
 public class ArrayChecker {
+  //the orginal method we want to refactor
   public boolean check(double[] expected, double[] actual, double maxValue, double delta) {
 
     // Clip 'too large' values
@@ -28,5 +29,10 @@ public class ArrayChecker {
     }
 
     return true;
+  }
+
+  //our updated method in construction
+  public boolean newCheck(double[] expected, double[] actual, double maxValue, double delta) {
+    return false;
   }
 }
