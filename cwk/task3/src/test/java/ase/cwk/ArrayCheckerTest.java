@@ -19,12 +19,12 @@ public class ArrayCheckerTest {
     double delta = 5.0;
 
     double[] actual = new double[] {12.5, 54.9, 25.4, 110.0};
-    assertTrue(checker.check(expected, actual, maxValue, delta));
+    assertTrue(checker.newCheck(expected, actual, maxValue, delta));
 
     actual = new double[] {12.5, 55.1, 25.4, 98.0};
-    assertFalse(checker.check(expected, actual, maxValue, delta));
+    assertFalse(checker.newCheck(expected, actual, maxValue, delta));
 
     actual = new double[] {10.0, 50.0, 30.0};
-    assertFalse(checker.check(expected, actual, maxValue, delta));
+    assertFalse(checker.newCheck(expected, actual, maxValue, delta));
   }
 }
