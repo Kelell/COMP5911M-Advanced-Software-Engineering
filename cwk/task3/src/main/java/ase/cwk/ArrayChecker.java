@@ -33,6 +33,24 @@ public class ArrayChecker {
 
   //our updated method in construction
   public boolean newCheck(double[] expected, double[] actual, double maxValue, double delta) {
-    return false;
+
+    //singular array  sweep
+    for (int i = 0; i < actual.length; ++i) {
+      // Clip 'too large' values
+      if (actual[i] > maxValue) {
+        actual[i] = maxValue;
+      }
+      // Check that each entry is within the expected +/- delta
+      if (Math.abs(expected[i] - actual[i]) > delta) {
+        return false;
+      }
+    }
+
+    // Check for length differences
+    if (actual.length != expected.length) {
+      return false;
+    }
+
+    return true;
   }
 }
