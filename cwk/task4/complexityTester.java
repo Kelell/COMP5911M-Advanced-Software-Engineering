@@ -1,13 +1,12 @@
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
+import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class complexityTester {
    public static void main(String args[]) throws IOException {
-     System.out.println("Code got here");
     printDirectoryPath(args[0]);
    }
 
@@ -23,16 +22,24 @@ public class complexityTester {
            //File directoryPath = new File("/home/cserv1_a/soc_msc/ll16kdt/modules/AdvEng/task4");
            File directoryPath = new File(path);
            //List of all files and directories
-           String contents[] = directoryPath.list();
-           System.out.println("List of files and directories in the specified directory:");
-           for(int i=0; i<contents.length; i++) {
-              System.out.println(contents[i]);
-           }
-
+           FilenameFilter textFilefilter = new FilenameFilter(){
+         public boolean accept(File dir, String name) {
+            String lowercaseName = name.toLowerCase();
+            if (lowercaseName.endsWith(".class")) {
+               return true;
+            } else {
+               return false;
+            }
+         }
+      };
+      //List of all the text files
+      File filesList[] = directoryPath.listFiles(textFilefilter);
+      System.out.println("List of the class files in the specified directory:");
+      for(File file : filesList) {
+         System.out.println("File path: "+file.getAbsolutePath());
+      }
        } catch (Exception e) {
            e.printStackTrace();
        }
-
    }
-
 }
