@@ -15,10 +15,10 @@ import java.lang.reflect.*;
 
 public class ComplexityTester {
    public static void main(String args[]) throws IOException {
-    printDirectoryPath(args[0]);
+    getDirectoryPath(args[0]);
    }
 
-   static void printDirectoryPath(String path) {
+   static void getDirectoryPath(String path) {
        try {
             Path testPath = Paths.get(path);
           //Path testPath = Paths.get("/home/cserv1_a/soc_msc/ll16kdt/modules/AdvEng/task4");
@@ -47,7 +47,8 @@ public class ComplexityTester {
          String noExtension= file.getName().replaceFirst("[.][^.]+$", "");
          System.out.println("File name: "+ noExtension);
          ReadFile(file.getAbsolutePath().toString());
-         InspectClass(path, noExtension);
+         int numberOfMethods=InspectClass(path, noExtension);
+         System.out.println("Has "+ numberOfMethods+ " methods");
       }
        } catch (Exception e) {
            e.printStackTrace();
@@ -76,10 +77,11 @@ public class ComplexityTester {
      e.printStackTrace();
    }
  }
-//here
-static void InspectClass(String directoryPath, String noExtension) throws ClassNotFoundException, MalformedURLException {
+//This method returns the number of methods for each class in the directory
+static int InspectClass(String directoryPath, String noExtension) throws ClassNotFoundException, MalformedURLException {
     @SuppressWarnings("unchecked")
         URL classUrl;
+        int numberOfMethods=0;
         //this line needs to be changed to take a classpath
         String directoryURL= ("file://"+directoryPath+"/");
         classUrl = new URL(directoryURL);
@@ -90,13 +92,16 @@ static void InspectClass(String directoryPath, String noExtension) throws ClassN
         try {
            Method m[] = c.getDeclaredMethods();
            String className = c.getName();
-           System.out.println(className+ " Methods are: ");
+           numberOfMethods=0;
+           //System.out.println(className+ " Methods are: "); //testing line
            for (int i = 0; i < m.length; i++){
-             System.out.println(m[i].toString());
+             //System.out.println(m[i].toString()); //testing line
+             numberOfMethods++;
            }
         }
         catch (Throwable e) {
            System.err.println(e);
         }
+        return numberOfMethods;
     }
 }
