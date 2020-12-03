@@ -12,6 +12,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.lang.reflect.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class ComplexityTester {
    public static void main(String args[]) throws IOException {
@@ -33,7 +36,7 @@ public class ComplexityTester {
            FilenameFilter textFilefilter = new FilenameFilter(){
            public boolean accept(File dir, String name) {
             String lowercaseName = name.toLowerCase();
-            if (lowercaseName.endsWith(".class")) {
+            if (lowercaseName.endsWith(".java")) {
                return true;
             } else {
                return false;
@@ -46,37 +49,49 @@ public class ComplexityTester {
         //Use regex to remove the class extension
          String noExtension= file.getName().replaceFirst("[.][^.]+$", "");
          System.out.println("File name: "+ noExtension);
-         ReadFile(file.getAbsolutePath().toString());
+         int numberOfKeyWords=ReadFile(file.getAbsolutePath().toString());
          int numberOfMethods=InspectClass(path, noExtension);
          System.out.println("Has "+ numberOfMethods+ " methods");
+         System.out.println("Has "+ numberOfKeyWords+ " keywords");
+         int cyclomaticComplexity= numberOfKeyWords+numberOfMethods;
+         System.out.println("Has a complexity of: "+cyclomaticComplexity);
+
       }
        } catch (Exception e) {
            e.printStackTrace();
        }
    }
    //here
-   static void ReadFile(String path) {
-   BufferedReader reader;
-    int numberOfLines=1;
-    int percentOfComments;
+   static int ReadFile(String path) {
+     String fileContent="";
+     String temp="";
+     int keyWords=0;
    try {
-     reader = new BufferedReader(new FileReader(path));
-     String line = reader.readLine();
-     while (line != null) {
-        //for my line of code measure, I have decided to skip blank lines
-        if(line.trim().length() > 0){
-             //System.out.println(line);
-              numberOfLines++;
-        }
-        // read next line
-       line = reader.readLine();
+     File f = new File(path);
+     byte[] bf = new byte[(int)f.length()];
+     new FileInputStream(f).read(bf);
+     fileContent = new String(bf, "UTF-8");
+     //remove all comments from the string
+     String noComments= fileContent.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)","");
+     String delims = "[ ]+";
+     String[] tokens = noComments.split(delims);
+     for(int i = 0; i < tokens.length; i++){
+       if(tokens[i].trim().length() > 0){
+         temp=tokens[i].replaceAll("\\s","");
+         if(temp.matches(".*if.*|.*while.*|.*for.*|.*case.*|.*switch.*|.*try.*|.*catch.*|.*\\|\\|.*|.*&&.*|.*\\|\\|.*|.*&&.*")){
+           keyWords++;
+         }
+       }
      }
-     reader.close();
-      System.out.println("Number of lines in code: "+numberOfLines);
-   } catch (IOException e) {
+     //System.out.println("Number of keywords: "+keyWords);
+ } catch (FileNotFoundException e) {
      e.printStackTrace();
-   }
+ } catch (IOException e) {
+     e.printStackTrace();
  }
+ return keyWords;
+}
+
 //This method returns the number of methods for each class in the directory
 static int InspectClass(String directoryPath, String noExtension) throws ClassNotFoundException, MalformedURLException {
     @SuppressWarnings("unchecked")
