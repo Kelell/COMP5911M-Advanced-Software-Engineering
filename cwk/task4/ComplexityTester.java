@@ -1,36 +1,34 @@
-import java.io.IOException;
-import java.io.File;
-import java.nio.file.Files;
-import java.io.FilenameFilter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.lang.reflect.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.MalformedURLException;
+import java.util.regex.Matcher;
+import java.lang.reflect.*;
+
+
 
 public class ComplexityTester {
    public static void main(String args[]) throws IOException {
-    getDirectoryPath(args[0]);
+    GetDirectoryPath(args[0]);
    }
 
-   static void getDirectoryPath(String path) {
+   static void GetDirectoryPath(String path) {
        try {
             Path testPath = Paths.get(path);
-          //Path testPath = Paths.get("/home/cserv1_a/soc_msc/ll16kdt/modules/AdvEng/task4");
             if (Files.notExists(testPath)) {
               System.out.println("Directory not found");
                 return;
            }
            //Creating a File object for directory
-           //File directoryPath = new File("/home/cserv1_a/soc_msc/ll16kdt/modules/AdvEng/task4");
            File directoryPath = new File(path);
            //List of all files and directories
            FilenameFilter textFilefilter = new FilenameFilter(){
@@ -43,16 +41,17 @@ public class ComplexityTester {
             }
          }
       };
-      //List of all the text files
+      //List of all the the java files in the directory
       File filesList[] = directoryPath.listFiles(textFilefilter);
+      //all of the below needs to be it's own class
       for(File file : filesList) {
-        //Use regex to remove the class extension
+        //Use regex to remove the class extension, required for Relefection API
          String noExtension= file.getName().replaceFirst("[.][^.]+$", "");
          System.out.println("File name: "+ noExtension);
          int numberOfKeyWords=ReadFile(file.getAbsolutePath().toString());
          int numberOfMethods=InspectClass(path, noExtension);
-         System.out.println("Has "+ numberOfMethods+ " methods");
-         System.out.println("Has "+ numberOfKeyWords+ " keywords");
+         //System.out.println("Has "+ numberOfMethods+ " methods");
+         //System.out.println("Has "+ numberOfKeyWords+ " keywords");
          int cyclomaticComplexity= numberOfKeyWords+numberOfMethods;
          System.out.println("Has a complexity of: "+cyclomaticComplexity);
 
