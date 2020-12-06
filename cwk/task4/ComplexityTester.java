@@ -14,53 +14,34 @@ import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.lang.reflect.*;
 
-
-
 public class ComplexityTester {
    public static void main(String args[]) throws IOException {
-    GetDirectoryPath(args[0]);
+     String path= args[0];
+     File filesList[]=GetDirectoryPath(path);
+     CalculateComplexity(path, filesList);
    }
 
-   static void GetDirectoryPath(String path) {
-       try {
-            Path testPath = Paths.get(path);
-            if (Files.notExists(testPath)) {
-              System.out.println("Directory not found");
-                return;
-           }
-           //Creating a File object for directory
-           File directoryPath = new File(path);
-           //List of all files and directories
-           FilenameFilter textFilefilter = new FilenameFilter(){
-           public boolean accept(File dir, String name) {
-            String lowercaseName = name.toLowerCase();
-            if (lowercaseName.endsWith(".java")) {
-               return true;
-            } else {
-               return false;
-            }
-         }
+   //Follow the directory path and get all the file locations
+   static File[] GetDirectoryPath(String path) throws FileNotFoundException{
+    //Creating a File object for directory
+    File directoryPath = new File(path);
+    //List of all files and directories
+    FilenameFilter textFilefilter = new FilenameFilter(){
+      public boolean accept(File dir, String name) {
+        String lowercaseName = name.toLowerCase();
+        if (lowercaseName.endsWith(".java")) {
+          return true;
+        } else {
+          return false;
+        }
+      }
       };
       //List of all the the java files in the directory
       File filesList[] = directoryPath.listFiles(textFilefilter);
-      //all of the below needs to be it's own class
-      for(File file : filesList) {
-        //Use regex to remove the class extension, required for Relefection API
-         String noExtension= file.getName().replaceFirst("[.][^.]+$", "");
-         System.out.println("File name: "+ noExtension);
-         int numberOfKeyWords=ReadFile(file.getAbsolutePath().toString());
-         int numberOfMethods=InspectClass(path, noExtension);
-         //System.out.println("Has "+ numberOfMethods+ " methods");
-         //System.out.println("Has "+ numberOfKeyWords+ " keywords");
-         int cyclomaticComplexity= numberOfKeyWords+numberOfMethods;
-         System.out.println("Has a complexity of: "+cyclomaticComplexity);
+      return filesList;
+    }
 
-      }
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-   }
-   //here
+   //Method for reading the contents of .java files.
    static int ReadFile(String path) {
      String fileContent="";
      String temp="";
@@ -118,4 +99,22 @@ static int InspectClass(String directoryPath, String noExtension) throws ClassNo
         }
         return numberOfMethods;
     }
+
+    static void CalculateComplexity(String path, File filesList[]) {
+      try {
+        for(File file : filesList) {
+          //Use regex to remove the class extension, required for Relefection API
+           String noExtension= file.getName().replaceFirst("[.][^.]+$", "");
+           System.out.println("File name: "+ noExtension);
+           int numberOfKeyWords=ReadFile(file.getAbsolutePath().toString());
+           int numberOfMethods=InspectClass(path, noExtension);
+           //System.out.println("Has "+ numberOfMethods+ " methods");
+           //System.out.println("Has "+ numberOfKeyWords+ " keywords");
+           int cyclomaticComplexity= numberOfKeyWords+numberOfMethods;
+           System.out.println("Has a complexity of: "+cyclomaticComplexity);
+      }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+  }
 }
