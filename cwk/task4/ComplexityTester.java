@@ -18,7 +18,10 @@ public class ComplexityTester {
    public static void main(String args[]) throws IOException {
      String path= args[0];
      File filesList[]=GetDirectoryPath(path);
-     CalculateComplexity(path, filesList);
+     String directoryName= filesList[0].getParentFile().getName();
+     System.out.println("\n");
+     System.out.println("Calculating the complexity for: "+directoryName+" directory");
+     CalculateComplexity(path, filesList, directoryName);
    }
 
    //Follow the directory path and get all the file locations
@@ -96,7 +99,7 @@ static int InspectClass(String directoryPath, String noExtension) throws ClassNo
         return numberOfMethods;
     }
 
-    static void CalculateComplexity(String path, File filesList[]) {
+    static void CalculateComplexity(String path, File filesList[], String directoryName) {
       int numberOfFiles=0;
       int totalComplexity=0;
       int averageComplexity;
@@ -125,8 +128,8 @@ static int InspectClass(String directoryPath, String noExtension) throws ClassNo
       }
       averageComplexity=(totalComplexity / numberOfFiles);
       System.out.println("\n");
-      System.out.println("The average complexty of the directory is: "+averageComplexity);
-      System.out.println("The maximum complexty of the directory is: "+highestFile+" with: "+highestCompexity);
+      System.out.println("The average complexty of "+directoryName+" is: "+averageComplexity);
+      System.out.println("The maximum complexty of "+directoryName+" is: "+highestFile+" with: "+highestCompexity);
     } catch (Exception e) {
         e.printStackTrace();
     }
