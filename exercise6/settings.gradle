@@ -1,0 +1,3 @@
+rootProject.name = 'exercise6'
+include 'initial'
+include 'final'
